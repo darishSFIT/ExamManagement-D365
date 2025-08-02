@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36301.6 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "proMX.ExamManagement.Plugins", "proMX.ExamManagement\proMX.ExamManagement.Plugins.csproj", "{51084FC0-CFF2-4914-83AB-DDE372D1F47B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "proMX.ExamManagement.WebResources", "proMX.ExamManagement.WebResources\proMX.ExamManagement.WebResources.csproj", "{FD201E8F-3EDB-47C5-9780-1324DE47CFD4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51084FC0-CFF2-4914-83AB-DDE372D1F47B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51084FC0-CFF2-4914-83AB-DDE372D1F47B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51084FC0-CFF2-4914-83AB-DDE372D1F47B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51084FC0-CFF2-4914-83AB-DDE372D1F47B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD201E8F-3EDB-47C5-9780-1324DE47CFD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD201E8F-3EDB-47C5-9780-1324DE47CFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD201E8F-3EDB-47C5-9780-1324DE47CFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD201E8F-3EDB-47C5-9780-1324DE47CFD4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1F45D0DC-509E-4FCC-A6AD-19A45E0A2645}
+	EndGlobalSection
+EndGlobal
