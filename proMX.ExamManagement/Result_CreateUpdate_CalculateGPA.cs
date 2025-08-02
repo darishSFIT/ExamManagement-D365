@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using proMX.ExamManagement.Plugins.Wellknown;
 using proMX.ExamManagement.Wellknown;
 using System;
 using System.ServiceModel;

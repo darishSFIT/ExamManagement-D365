@@ -95,6 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="pluginTemplate.cs" />
     <Compile Include="Course_Create_AutoAssignInstructor.cs" />
     <Compile Include="Exam_Create_AutoCreateQuestionPaper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
