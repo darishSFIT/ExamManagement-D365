@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using Microsoft.Xrm.Sdk;
@@ -66,7 +65,6 @@ namespace proMX.ExamManagement.Plugins
                     ex.InnerException.Message != null ? ex.InnerException.Message : ex.Message));
             }
         }
-
         private void Implementation(IOrganizationService service, Entity exam, ITracingService tracingService, IPluginExecutionContext context)
         {
             try
@@ -97,7 +95,7 @@ namespace proMX.ExamManagement.Plugins
 
                 tracingService.Trace($"Course linked to Exam: {courseRef.Id}");
 
-                // Create Question Paper
+                // Create Question Paper record
                 Entity questionPaper = new Entity(QuestionPaper.LogicalName);
                 questionPaper[QuestionPaper.QuestionPaperName] = $"{examName} QP {DateTime.Now:dd/MM/yyyy}";
                 questionPaper[QuestionPaper.ExamName] = new EntityReference(Exam.LogicalName, examId);
@@ -105,48 +103,54 @@ namespace proMX.ExamManagement.Plugins
                 Guid questionPaperId = service.Create(questionPaper);
                 tracingService.Trace($"Question Paper created with Id: {questionPaperId}");
 
-                // Retrieve active Questions for the same course (random 5)
+                // Retrieve active Questions linked to this exam
                 QueryExpression query = new QueryExpression(Question.LogicalName)
                 {
-                    ColumnSet = new ColumnSet(Question.Id, Question.QuestionText, Question.Marks, Question.IsActive),
+                    ColumnSet = new ColumnSet(Question.Id, Question.QuestionText, Question.Marks /*, Question.IsActive*/),
                     Criteria = new FilterExpression
                     {
                         Conditions =
                         {
-                            new ConditionExpression(Question.IsActive, ConditionOperator.Equal, (int)Question.Question_IsActive.True),
-                            // Filter Questions related to the Course via Exam lookup's course - we assume Question has dc_examid lookup to Exam
-                            // So first, get Exams linked to the same course (filter by courseRef.Id)
-                            // But since Plugin is on Exam, and Questions linked by Exam, direct filter by dc_examid = examId should work
-                            new ConditionExpression(Question.ExamLookup, ConditionOperator.Equal, examId)
+                            //new ConditionExpression(Question.IsActive, ConditionOperator.Equal, true) ,
+                            new ConditionExpression(Question.CourseLookup, ConditionOperator.Equal, courseRef.Id)
                         }
                     }
                 };
+                tracingService.Trace("filter vlaues "+Question.CourseLookup + " condition set to: " + courseRef.Id);
+                tracingService.Trace("active question boolean set: "+Question.Question_IsActive.True);
 
                 var questionResults = service.RetrieveMultiple(query);
                 var questions = questionResults.Entities.ToList();
 
-                if (questions.Count == 0)
+                if (!questions.Any())
                 {
-                    tracingService.Trace("No active questions found for this Exam.");
+                    tracingService.Trace("No active Questions found for the Exam.");
                     return;
                 }
 
-                // Randomly select 5 questions (or all if less than 5)
+                // Select 5 random questions (or less if not available)
                 var rnd = new Random();
                 var selectedQuestions = questions.OrderBy(x => rnd.Next()).Take(5).ToList();
 
-                tracingService.Trace($"Selected {selectedQuestions.Count} random questions.");
+                tracingService.Trace($"Selected {selectedQuestions.Count} Questions for the Question Paper.");
 
-                // Link each Question to the Question Paper by updating the Question's QuestionPaper lookup
+                // Create collection of question references
+                var questionRefs = new EntityReferenceCollection();
                 foreach (var question in selectedQuestions)
                 {
-                    Entity updateQuestion = new Entity(Question.LogicalName, question.Id);
-                    updateQuestion[Question.QuestionText] = new EntityReference(QuestionPaper.LogicalName, questionPaperId);
-                    service.Update(updateQuestion);
-                    tracingService.Trace($"Linked Question Id: {question.Id} to Question Paper Id: {questionPaperId}");
+                    questionRefs.Add(question.ToEntityReference());
                 }
 
-                tracingService.Trace("Question Paper creation and linking completed successfully.");
+                // Define the relationship schema name - replace with your actual N:N relationship name between questionpaper and question
+                string relationshipName = "dc_ExamQuestion_dc_Question_dc_QuestionRelatedForm"; // Example: Schema name of N:N relationship
+
+                // Create the relationship object
+                var relationship = new Relationship(relationshipName);
+
+                // Associate the questions with the question paper
+                service.Associate(QuestionPaper.LogicalName, questionPaperId, relationship, questionRefs);
+
+                tracingService.Trace("Successfully associated Questions with the Question Paper.");
             }
             catch (Exception ex)
             {
@@ -154,5 +158,6 @@ namespace proMX.ExamManagement.Plugins
                 throw;
             }
         }
+
     }
 }

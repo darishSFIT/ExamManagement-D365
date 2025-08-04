@@ -2,7 +2,7 @@
 {
     internal class QuestionPaper
     {
-        public const string LogicalName = "dc_questionpaper";
+        public const string LogicalName = "dc_examquestion";
         //public const string Id = "dc_examquestionid"; // Lookup to ExamQuestion
         //public const string Question = "dc_questionid"; // Lookup to Question
         public const string ExamName = "dc_examid"; // Lookup to Exam table to get the exam name

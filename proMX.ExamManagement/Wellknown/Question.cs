@@ -9,6 +9,7 @@
         public const string QuestionText = "dc_questiontext"; // actual question text
         public const string QuestionIdNum = "dc_questionidnum"; // Autonumber
         public const string Marks = "dc_marks"; // marks per question
+        public const string CourseLookup = "dc_course"; // Lookup to Course
         public const string IsActive = "dc_isactive"; // Boolean
         public enum Question_IsActive
         {
